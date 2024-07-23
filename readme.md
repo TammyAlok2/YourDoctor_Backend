@@ -10,33 +10,32 @@
 
 
 
-### Forking and Making Changes
-1. Fork the repository on GitHub by clicking the "Fork" button at the top right of the repository page.
+### Clone  and Making Change 
 
-2. Clone your forked repository:
+1. Clone your  repository:
     ```bash
     git clone https://github.com/YouLab2024/YourLab_User_Page.git
-    cd your-repo-name
+    
     ```
 
-3. Create a new branch for your changes:
+2. Create a new branch for your changes:
     ```bash
     git checkout -b your-branch-name
     ```
 
-4. Make your changes to the code.
+3. Make your changes to the code.
 
-5. Stage your changes:
+4. Stage your changes:
     ```bash
     git add .
     ```
 
-6. Commit your changes:
+5. Commit your changes:
     ```bash
     git commit -m "Describe your changes"
     ```
 
-7. Push your changes to your forked repository:
+6. Push your changes to your forked repository:
     ```bash
     git push origin your-branch-name
     ```
