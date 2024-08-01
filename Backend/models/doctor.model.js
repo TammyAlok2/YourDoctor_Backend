@@ -4,7 +4,7 @@ import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-const userSchema = new Schema(
+const doctorSchema = new Schema(
   {
     fullName: {
       type: String,
@@ -38,10 +38,28 @@ const userSchema = new Schema(
         type: String,
       },
     },
-
+    specialist:{
+        type:String,
+        required:true,
+    },
+    description:{
+type:String,
+    },
+    status:{
+type:String,
+enum:['active','inactive'],
+default:'inactive',
+    },
+       appointments:[
+        {
+           type: Schema.Types.ObjectId,
+              ref: "Appointment",
+              select:false,
+        }
+       ],
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date,
-    appointments:[],
+    
   },
   
   {
@@ -50,14 +68,14 @@ const userSchema = new Schema(
 );
 
 // Hashes password before saving to the database
-userSchema.pre('save', async function (next) {
+doctorSchema.pre('save', async function (next) {
   // If password is not modified then do not hash it
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-userSchema.methods = {
+doctorSchema.methods = {
   // method which will help us compare plain password with hashed password and returns true or false
   comparePassword: async function (plainPassword) {
     return await bcrypt.compare(plainPassword, this.password);
@@ -92,6 +110,9 @@ userSchema.methods = {
   },
 };
 
-const User = model('User', userSchema);
 
-export default User;
+
+
+
+const Doctor = model('Doctor', doctorSchema);
+export default Doctor;

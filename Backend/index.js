@@ -1,16 +1,24 @@
-import express from 'express'
+import { v2 } from 'cloudinary';
 
-const app = express()
 
-const port = 3001
+import app from './app.js';
+import connectToDB from './configs/dbConn.js';
 
-app.get('/',(req,res)=>{
-    res.json({
-        message:"Welcome to your lab ",
-        success:true
-    })  
-})
-app.listen(port,()=>{
-    console.log(`App is listening in ${port}`)
-})
+// Cloudinary configuration
+v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'dytu2coay' ,
+  api_key: process.env.CLOUDINARY_API_KEY || 455556969989771,
+  api_secret: process.env.CLOUDINARY_API_SECRET ||  'mvZAN3yUiEbzxRqFFpykis-0lpw',
+});
 
+// Razorpay configuration
+
+
+const PORT = process.env.PORT || 5000;
+
+
+app.listen(PORT, async () => {
+  // Connect to DB
+  await connectToDB();
+  console.log(`App is running at http://localhost:${PORT}`);
+});
