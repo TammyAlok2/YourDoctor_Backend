@@ -412,16 +412,55 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   });
 });
 
+function generateRandomID(patientName, appointmentDate) {
+  // Function to generate a random alphanumeric character
+  function getRandomChar() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      return chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  // Ensure patientName has at least 2 characters
+  const namePart = patientName.slice(0, 2).toUpperCase();
+
+  // Extract day, month, and year from the appointmentDate
+  const [day, month, year] = appointmentDate.split('/');
+
+  // Ensure appointmentMonth is two digits
+  const monthPart = ('0' + month).slice(-2);
+
+  // Ensure appointmentYear is four digits
+  const yearPart = ('000' + year).slice(-4);
+
+  // Generate the rest of the ID with random characters to reach 12 characters in total
+  const randomPartLength = 12 - namePart.length - monthPart.length - yearPart.length;
+  let randomPart = '';
+  for (let i = 0; i < randomPartLength; i++) {
+      randomPart += getRandomChar();
+  }
+
+  // Combine all parts to form the final ID
+  const id = namePart + yearPart + monthPart+ randomPart;
+
+  return id;
+}
+
+
+
+
+
+
 
 export const newAppointment = asyncHandler(async(req,res,next)=>{
   const doctorId = req.params.doctorId;
   const {patientName,patientPhone,age,gender,description,date,time} = req.body
+const patientId = generateRandomID(patientName,date)
+
   if(!patientName||  !patientPhone || !age || !gender || !description || !date || !time){
 throw new AppError(400,"All fields are required ")
   }
 
   const appointment = await Appointment.create({
-    doctorId,patientName,patientPhone,age,gender,description,date,time
+    doctorId,patientName,patientPhone,age,gender,description,date,time,patientId
   })
   if(!appointment){
     return next(new AppError("Failed to create appointment", 400))
