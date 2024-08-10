@@ -1,0 +1,8 @@
+yaml
+targets:
+  - name: Backend
+    type: web
+    config:
+      env: dev
+      port: 8080
+      publicPath: /
