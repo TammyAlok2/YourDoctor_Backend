@@ -56,6 +56,10 @@ const appointmentSchema = new Schema(
       type: String,
       enum: ["Pending", "Accepted", "Rejected"],
     },
+    patientId:{
+      type:String,
+      required:true,
+    }
   },
   {
     timestamps: true,

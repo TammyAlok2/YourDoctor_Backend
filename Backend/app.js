@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import { config } from 'dotenv';
+import cors from 'cors';
 
 import morgan from 'morgan';
 import errorMiddleware from './middlewares/error.middleware.js';
@@ -20,10 +21,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(cors());
+
+// Third-Party
 
 // Server Status Check Route
 app.get('/ping', (_req, res) => {
-  res.send('Pong');
+  res.send('Pong');                                           
 });
 
 // Import all routes
