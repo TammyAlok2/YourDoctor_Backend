@@ -1,7 +1,7 @@
 
 import jwt from "jsonwebtoken";
 
-import AppError from "../utils/appError.js";
+import AppError from "../utils/AppError.js";
 import asyncHandler from "./asyncHandler.middleware.js";
 
 export const isLoggedIn = asyncHandler(async (req, _res, next) => {
