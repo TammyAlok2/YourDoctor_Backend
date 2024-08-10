@@ -2,7 +2,7 @@ import crypto from "crypto";
 import fs from "fs/promises";
 import cloudinary from "cloudinary";
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
-import AppError from "../utils/appError.js";
+import AppError from "../utils/AppError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import Doctor from '../models/doctor.model.js'
 import sendEmail from "../utils/sendEmail.js";
