@@ -9,20 +9,24 @@ const slotSchema = new Schema({
   },
   date: {
     type: String,
-    required: true
+    required: true,
+    trim:true,
   },
   slots: [
     {
       startTime: {
         type: String,
-        required: true
+        required: true,
+        trim:true,
       },
       endTime: {
         type: String,
-        required: true
+        required: true,
+        trim:true,
       },
       availableSlot: {
         type: Number,
+        trim:true,
         
     
       },
