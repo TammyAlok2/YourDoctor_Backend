@@ -44,6 +44,15 @@ const doctorSchema = new Schema(
     },
     description:{
 type:String,
+required:true,
+    },
+    mobileNumber:{
+      type:Number,
+      required:true,
+    },
+    address:{
+      type:String,
+      required:true
     },
     status:{
 type:String,

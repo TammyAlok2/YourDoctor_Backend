@@ -21,7 +21,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin:'*', //5000
+    credentials: true,
+  })
+)
 
 // Third-Party
 
