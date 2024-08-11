@@ -13,6 +13,7 @@ import {
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
+import { allSchedule, createSchedule, getScheduleForDate, updateSchedule } from "../controllers/doctorSlot.controllers.js";
 
 const router = Router();
 
@@ -26,5 +27,9 @@ router.post("/change-password", isLoggedIn, changePassword);
 router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
 router.get('/myAppointments',isLoggedIn,getAppointments)
 router.get("/allDoctors",getAllDoctors)
+router.post('/createSchedule',isLoggedIn,createSchedule)
+router.post('updateSchedule',isLoggedIn,updateSchedule)
+router.get('/getSchedule/:doctorId/:date',isLoggedIn,getScheduleForDate)
+router.get('/allSchedule',isLoggedIn,allSchedule)
 
 export default router;

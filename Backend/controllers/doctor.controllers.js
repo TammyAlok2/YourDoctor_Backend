@@ -153,8 +153,10 @@ export const loginUser = asyncHandler(async (req, res, next) => {
  * @ROUTE @POST {{URL}}/api/v1/user/logout
  * @ACCESS Public
  */
+
+
 export const logoutUser = asyncHandler(async (req, res, next) => {
-  // Find the user by their ID
+  
 
   // Setting the cookie value to null
   res.cookie("token", null, {
