@@ -64,7 +64,7 @@ export const createSchedule = asyncHandler(async (req, res, next) => {
             patients: [],
           },
         ],
-        slotSize: slots.length, // Initialize slotSize to 1
+         // Initialize slotSize to 1
       });
       await schedule.save();
       if (!schedule) {
