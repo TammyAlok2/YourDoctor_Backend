@@ -78,7 +78,8 @@ export const createSchedule = asyncHandler(async (req, res, next) => {
 
 export const getScheduleForDate = async (req, res) => {
   try {
-    const { doctorId, date } = req.params;
+    const { date } = req.params;
+    const doctorId = req.user.id;
     const schedule = await DoctorSchedule.findOne({ doctorId, date });
     if (!schedule) {
       return res.status(404).json({ message: 'Schedule not found' });

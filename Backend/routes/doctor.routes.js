@@ -32,7 +32,7 @@ router.post('/newAppointmentByDoctor',isLoggedIn,newAppointmentByDoctor)
 router.get("/allDoctors",getAllDoctors)
 router.post('/createSchedule',isLoggedIn,createSchedule)
 router.post('updateSchedule',isLoggedIn,updateSchedule)
-router.get('/getSchedule/:doctorId/:date',isLoggedIn,getScheduleForDate)
+router.get('/getSchedule/:date',isLoggedIn,getScheduleForDate)
 router.get('/allSchedule',isLoggedIn,allSchedule)
 
 export default router;
