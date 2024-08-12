@@ -463,7 +463,7 @@ function generateRandomID(patientName, appointmentDate) {
   const yearPart = ('000' + year).slice(-4);
 
   // Generate the rest of the ID with random characters to reach 12 characters in total
-  const randomPartLength = 12 - namePart.length - monthPart.length - yearPart.length;
+  const randomPartLength = 14 - namePart.length - monthPart.length - yearPart.length;
   let randomPart = '';
   for (let i = 0; i < randomPartLength; i++) {
       randomPart += getRandomChar();
