@@ -36,6 +36,9 @@ const appointmentSchema = new Schema(
     bloodPressure: {
       type: String,
     },
+    weight:{
+type:Number,
+    },
     description: {
       type: String,
       required: true,

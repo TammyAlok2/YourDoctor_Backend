@@ -452,7 +452,7 @@ function generateRandomID(patientName, appointmentDate) {
 
 export const newAppointment = asyncHandler(async(req,res,next)=>{
   const doctorId = req.params.doctorId;
-  const {patientName,patientPhone,age,gender,description,date,time,bloodPressure,diabetes} = req.body
+  const {patientName,patientPhone,age,gender,description,date,time,bloodPressure,diabetes,weight} = req.body
 const patientId = generateRandomID(patientName,date)
 
   if(!patientName||  !patientPhone || !age || !gender || !description || !date || !time){
@@ -460,7 +460,7 @@ throw new AppError(400,"All fields are required ")
   }
 
   const appointment = await Appointment.create({
-    doctorId,patientName,patientPhone,age,gender,description,date,time,patientId,bloodPressure,diabetes
+    doctorId,patientName,patientPhone,age,gender,description,date,time,patientId,bloodPressure,diabetes,weight
   })
   if(!appointment){
     return next(new AppError("Failed to create appointment", 400))
