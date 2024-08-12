@@ -481,7 +481,7 @@ export const newAppointmentByDoctor = asyncHandler(async(req,res,next)=>{
   const {patientName,patientPhone,age,gender,description,date,time,bloodPressure,diabetes,weight} = req.body
   const patientId = generateRandomID(patientName,date)
   const doctorId = req.user.id
-    if(!patientName||  !patientPhone || !age || !gender || !description || !date || !time  ){
+    if(!patientName||  !patientPhone || !age || !gender  || !date || !time  ){
   throw new AppError(400,"All fields are required ")
     }
 
