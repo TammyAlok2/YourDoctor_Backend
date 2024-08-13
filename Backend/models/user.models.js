@@ -29,6 +29,11 @@ const userSchema = new Schema(
       minlength: [8, 'Password must be at least 8 characters'],
       select: false, // Will not select password upon looking up a document
     },
+    mobile:{
+      type:Number,
+      required: [true, 'Number is required'],
+      minlength: [10, 'Number  must be at least 10 characters'],
+    },
     
     avatar: {
       public_id: {
@@ -91,7 +96,5 @@ userSchema.methods = {
     return resetToken;
   },
 };
-
 const User = model('User', userSchema);
-
 export default User;
