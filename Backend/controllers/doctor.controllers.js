@@ -4,7 +4,7 @@ import cloudinary from "cloudinary";
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 import AppError from "../utils/AppError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import Doctor from '../models/doctor.model.js'
+import Doctor from "../models/doctor.model.js";
 import sendEmail from "../utils/sendEmail.js";
 import Appointment from "../models/appointment.models.js";
 
@@ -12,9 +12,8 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production" ? true : false,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   httpOnly: true,
-  SameSite:"none",
+  SameSite: "none",
 };
-
 
 /**
  * @REGISTER
@@ -23,10 +22,26 @@ const cookieOptions = {
  */
 export const registerUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from req object
-  const { fullName, email, password,specialist,description,mobileNumber,address } = req.body;
-console.log(fullName,email,password,specialist)
+  const {
+    fullName,
+    email,
+    password,
+    specialist,
+    description,
+    mobileNumber,
+    address,
+  } = req.body;
+  console.log(fullName, email, password, specialist);
   // Check if the data is there or not, if not throw error message
-  if (!fullName || !email || !password || !specialist || !description||!mobileNumber || !address) {
+  if (
+    !fullName ||
+    !email ||
+    !password ||
+    !specialist ||
+    !description ||
+    !mobileNumber ||
+    !address
+  ) {
     return next(new AppError("All fields are required", 400));
   }
 
@@ -43,15 +58,15 @@ console.log(fullName,email,password,specialist)
     fullName,
     email,
     password,
-specialist,
-description,
-mobileNumber,
-address,
+    specialist,
+    description,
+    mobileNumber,
+    address,
     avatar: {
       public_id: email,
       secure_url:
-        "https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_drzgxv.jpg"
-    }
+        "https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_drzgxv.jpg",
+    },
   });
 
   // If user not created send message response
@@ -69,7 +84,7 @@ address,
         width: 250,
         height: 250,
         gravity: "faces", // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
-        crop: "fill"
+        crop: "fill",
       });
 
       // If success
@@ -81,9 +96,7 @@ address,
         // After successful upload remove the file from local storage
         fs.rm(`uploads/${req.file.filename}`);
       }
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   }
 
   // Save the user object
@@ -100,9 +113,7 @@ address,
   res.cookie("token", token, cookieOptions);
 
   // If all good send the response to the frontend
-  res.status(201).json(
-   new ApiResponse(200,user,"User created successfully")
-  )
+  res.status(201).json(new ApiResponse(200, user, "User created successfully"));
 });
 
 /**
@@ -121,7 +132,6 @@ export const loginUser = asyncHandler(async (req, res, next) => {
 
   // Finding the user with the sent email
   const user = await Doctor.findOne({ email }).select("+password");
-  
 
   // If no user or sent password do not match then send generic response
   if (!(user && (await user.comparePassword(password)))) {
@@ -130,8 +140,8 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  user.status = 'active'
-  await user.save()
+  user.status = "active";
+  await user.save();
 
   // Generating a JWT token
   const token = await user.generateJWTToken();
@@ -143,9 +153,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
   res.cookie("token", token, cookieOptions);
 
   // If all good send the response to the frontend
-  res.status(200).json(
-    new ApiResponse(200,user,"user login successfully")
-  )
+  res.status(200).json(new ApiResponse(200, user, "user login successfully"));
 });
 
 /**
@@ -154,15 +162,12 @@ export const loginUser = asyncHandler(async (req, res, next) => {
  * @ACCESS Public
  */
 
-
 export const logoutUser = asyncHandler(async (req, res, next) => {
-  
-
   // Setting the cookie value to null
   res.cookie("token", null, {
     secure: process.env.NODE_ENV === "production" ? true : false,
     maxAge: 0,
-    httpOnly: true
+    httpOnly: true,
   });
 
   // Sending the response
@@ -185,7 +190,7 @@ export const getLoggedInUserDetails = asyncHandler(async (req, res, _next) => {
   res.status(200).json({
     success: true,
     message: "User details",
-    user
+    user,
   });
 });
 
@@ -239,7 +244,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     // If email sent successfully send the success response
     res.status(200).json({
       success: true,
-      message: `Reset password token has been sent to ${email} successfully`
+      message: `Reset password token has been sent to ${email} successfully`,
     });
   } catch (error) {
     // If some error happened we need to clear the forgotPassword* fields in our DB
@@ -263,14 +268,13 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
  * @ACCESS Public
  */
 export const resetPassword = asyncHandler(async (req, res, next) => {
-
   // Extracting resetToken from req.params object
   const { resetToken } = req.params;
- // console.log(resetToken)
+  // console.log(resetToken)
 
   // Extracting password from req.body object
   const { password } = req.body;
- // console.log( 'passward  is ',password)
+  // console.log( 'passward  is ',password)
 
   // We are again hashing the resetToken using sha256 since we have stored our resetToken in DB using the same algorithm
   const forgotPasswordToken = crypto
@@ -288,7 +292,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   // Checking if token matches in DB and if it is still valid(Not expired)
   const user = await Doctor.findOne({
     forgotPasswordToken,
-    forgotPasswordExpiry: { $gt: Date.now() } // $gt will help us check for greater than value, with this we can check if token is valid or expired
+    forgotPasswordExpiry: { $gt: Date.now() }, // $gt will help us check for greater than value, with this we can check if token is valid or expired
   });
 
   // If not found or expired send the response
@@ -311,7 +315,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   // Sending the response when everything goes good
   res.status(200).json({
     success: true,
-    message: "Password changed successfully"
+    message: "Password changed successfully",
   });
 });
 
@@ -323,7 +327,7 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
 export const changePassword = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
   const { oldPassword, newPassword } = req.body;
- // console.log(oldPassword,newPassword)
+  // console.log(oldPassword,newPassword)
   const { id } = req.user; // because of the middleware isLoggedIn
 
   // Check if the values are there or not
@@ -360,7 +364,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "Password changed successfully"
+    message: "Password changed successfully",
   });
 });
 
@@ -395,7 +399,7 @@ export const updateUser = asyncHandler(async (req, res, next) => {
         width: 250,
         height: 250,
         gravity: "faces", // This option tells cloudinary to center the image around detected faces (if any) after cropping or resizing the original image
-        crop: "fill"
+        crop: "fill",
       });
 
       // If success
@@ -419,17 +423,33 @@ export const updateUser = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({
     success: true,
-    message: "User details updated successfully"
+    message: "User details updated successfully",
   });
 });
 
+export const activeStatus = asyncHandler(async (req,res,next)=>{
+  const {status} = req.body;
+  if(!status){
+    return next(new AppError("Please select a status", 400));
+  }
+  const doctor = await Doctor.findById(req.body.id)
+  if(!doctor){
+    return next(new AppError("Doctor not found", 404))
+  }
+  doctor.status = status;
+  await doctor.save()
+  res
+    .status(200)
+    .json(new ApiResponse(200, doctor, `Doctor is ${status}`));
 
-export const getAllDoctors = asyncHandler(async(req,res,next)=>{
-    const doctors = await Doctor.find({});
-    res.status(200).json(
-        new ApiResponse(200,doctors,"Doctors fetched successfully")
-    )
 })
+
+export const getAllDoctors = asyncHandler(async (req, res, next) => {
+  const doctors = await Doctor.find({});
+  res
+    .status(200)
+    .json(new ApiResponse(200, doctors, "Doctors fetched successfully"));
+});
 
 export const getAppointments = asyncHandler(async (req, res, next) => {
   const doctorId = req.user.id; // assuming req.doctor is set in middleware
@@ -439,61 +459,83 @@ export const getAppointments = asyncHandler(async (req, res, next) => {
     success: true,
     count: appointments.length,
     data: appointments,
-    message:"appointment fetched successfully"
+    message: "appointment fetched successfully",
   });
 });
 
 function generateRandomID(patientName, appointmentDate) {
   // Function to generate a random alphanumeric character
   function getRandomChar() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      return chars.charAt(Math.floor(Math.random() * chars.length));
+    const chars =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    return chars.charAt(Math.floor(Math.random() * chars.length));
   }
 
   // Ensure patientName has at least 2 characters
   const namePart = patientName.slice(0, 2).toUpperCase();
 
   // Extract day, month, and year from the appointmentDate
-  const [day, month, year] = appointmentDate.split('/');
+  const [day, month, year] = appointmentDate.split("/");
 
   // Ensure appointmentMonth is two digits
-  const monthPart = ('0' + month).slice(-2);
+  const monthPart = ("0" + month).slice(-2);
 
   // Ensure appointmentYear is four digits
-  const yearPart = ('000' + year).slice(-4);
+  const yearPart = ("000" + year).slice(-4);
 
   // Generate the rest of the ID with random characters to reach 12 characters in total
-  const randomPartLength = 14 - namePart.length - monthPart.length - yearPart.length;
-  let randomPart = '';
+  const randomPartLength =
+    14 - namePart.length - monthPart.length - yearPart.length;
+  let randomPart = "";
   for (let i = 0; i < randomPartLength; i++) {
-      randomPart += getRandomChar();
+    randomPart += getRandomChar();
   }
 
   // Combine all parts to form the final ID
-  const id = namePart + yearPart + monthPart+ randomPart;
+  const id = namePart + yearPart + monthPart + randomPart;
 
   return id;
 }
 
+export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
+  const {
+    patientName,
+    patientPhone,
+    age,
+    gender,
+    description,
+    date,
+    time,
+    bloodPressure,
+    diabetes,
+    weight,
+  } = req.body;
+  const patientId = generateRandomID(patientName, date);
+  const doctorId = req.user.id;
+  if (!patientName || !patientPhone || !age || !gender || !date || !time) {
+    throw new AppError(400, "All fields are required ");
+  }
 
-  
-export const newAppointmentByDoctor = asyncHandler(async(req,res,next)=>{
-  const {patientName,patientPhone,age,gender,description,date,time,bloodPressure,diabetes,weight} = req.body
-  const patientId = generateRandomID(patientName,date)
-  const doctorId = req.user.id
-    if(!patientName||  !patientPhone || !age || !gender  || !date || !time  ){
-  throw new AppError(400,"All fields are required ")
-    }
-
-    const appointment = await Appointment.create({
-      doctorId,patientName,patientPhone,age,gender,description,date,time,patientId,bloodPressure,diabetes,weight
-    })
-    if(!appointment){
-      return next(new AppError("Failed to create appointment", 400))
-    }
-    res.status(201).json(
-      new ApiResponse(200,appointment,"Appointment by doctor successfully ")
-    )
-
-
-})
+  const appointment = await Appointment.create({
+    doctorId,
+    patientName,
+    patientPhone,
+    age,
+    gender,
+    description,
+    date,
+    time,
+    patientId,
+    bloodPressure,
+    diabetes,
+    weight,
+  });
+  if (!appointment) {
+    return next(new AppError("Failed to create appointment", 400));
+  }
+  res
+    .status(201)
+    .json(
+      new ApiResponse(200, appointment, "Appointment by doctor successfully ")
+    );
+});

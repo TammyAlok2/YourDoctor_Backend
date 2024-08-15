@@ -10,7 +10,8 @@ import {
   resetPassword,
   updateUser,
   getAppointments,
-  newAppointmentByDoctor
+  newAppointmentByDoctor,
+  activeStatus
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -34,5 +35,6 @@ router.post('/createSchedule',isLoggedIn,createSchedule)
 router.post('updateSchedule',isLoggedIn,updateSchedule)
 router.get('/getSchedule/:date',isLoggedIn,getScheduleForDate)
 router.get('/allSchedule',isLoggedIn,allSchedule)
+router.post('/doctor-status',isLoggedIn,activeStatus)
 
 export default router;
