@@ -140,7 +140,7 @@ export const loginUser = asyncHandler(async (req, res, next) => {
     );
   }
 
-  user.status = "active";
+
   await user.save();
 
   // Generating a JWT token
