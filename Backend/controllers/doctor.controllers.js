@@ -432,7 +432,7 @@ export const activeStatus = asyncHandler(async (req,res,next)=>{
   if(!status){
     return next(new AppError("Please select a status", 400));
   }
-  const doctor = await Doctor.findById(req.body.id)
+  const doctor = await Doctor.findById(req.user.id)
   if(!doctor){
     return next(new AppError("Doctor not found", 404))
   }
