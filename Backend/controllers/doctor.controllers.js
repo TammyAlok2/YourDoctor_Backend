@@ -543,8 +543,7 @@ export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
 export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => {
   const {
     description,
-    date,
-    time,
+    
     bloodPressure,
     diabetes,
     weight,
@@ -552,12 +551,15 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
   const patientId = generateRandomID(patientName, date);
   const doctorId = req.user.id;
   const appointmentId = req.params;
-  if (!patientName || !patientPhone || !age || !gender || !date || !time) {
+  if (!description|| !bloodPressure || !diabetes ||!weight) {
     throw new AppError(400, "All fields are required ");
   }
 
 
   const appointment = await Appointment.findById(appointmentId);
+  if(!appointment){
+    throw new AppError(400, "Appointment does not exist");
+  }
 
   appointment.description = description;
   appointment.bloodPressure = bloodPressure;
