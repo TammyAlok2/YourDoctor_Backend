@@ -59,6 +59,12 @@ type:String,
 enum:['active','inactive'],
 default:'inactive',
     },
+    fees:[
+      {
+        type:Number,
+
+      }
+    ],
        appointments:[
         {
            type: Schema.Types.ObjectId,
@@ -118,9 +124,6 @@ doctorSchema.methods = {
     return resetToken;
   },
 };
-
-
-
 
 
 const Doctor = model('Doctor', doctorSchema);

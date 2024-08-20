@@ -539,3 +539,33 @@ export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
       new ApiResponse(200, appointment, "Appointment by doctor successfully ")
     );
 });
+
+export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => {
+  const {
+    description,
+    date,
+    time,
+    bloodPressure,
+    diabetes,
+    weight,
+  } = req.body;
+  const patientId = generateRandomID(patientName, date);
+  const doctorId = req.user.id;
+  const appointmentId = req.params;
+  if (!patientName || !patientPhone || !age || !gender || !date || !time) {
+    throw new AppError(400, "All fields are required ");
+  }
+
+
+  const appointment = await Appointment.findById(appointmentId);
+
+  appointment.description = description;
+  appointment.bloodPressure = bloodPressure;
+  appointment.diabetes = diabetes;
+  appointment.weight = weight;
+  res
+    .status(201)
+    .json(
+      new ApiResponse(200, appointment, "Appointment update by doctor successfully ")
+    );
+});

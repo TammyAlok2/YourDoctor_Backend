@@ -11,7 +11,8 @@ import {
   updateUser,
   getAppointments,
   newAppointmentByDoctor,
-  activeStatus
+  activeStatus,
+  updateAppointmentByDoctor
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -30,6 +31,7 @@ router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
 router.get('/myAppointments',isLoggedIn,getAppointments)
 
 router.post('/newAppointmentByDoctor',isLoggedIn,newAppointmentByDoctor)
+router.post('/updateAppointmentByDoctor/:appointmentId',isLoggedIn,updateAppointmentByDoctor)
 router.get("/allDoctors",getAllDoctors)
 router.post('/createSchedule',isLoggedIn,createSchedule)
 router.post('updateSchedule',isLoggedIn,updateSchedule)
