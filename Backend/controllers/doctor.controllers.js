@@ -565,6 +565,7 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
   appointment.bloodPressure = bloodPressure;
   appointment.diabetes = diabetes;
   appointment.weight = weight;
+  await appointment.save();
   res
     .status(201)
     .json(
