@@ -548,8 +548,7 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
     diabetes,
     weight,
   } = req.body;
-  const patientId = generateRandomID(patientName, date);
-  const doctorId = req.user.id;
+
   const appointmentId = req.params;
   if (!description|| !bloodPressure || !diabetes ||!weight) {
     throw new AppError(400, "All fields are required ");
