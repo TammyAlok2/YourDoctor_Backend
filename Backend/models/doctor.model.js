@@ -55,7 +55,7 @@ required:true,
       required:true
     },
     status:{
-type:String,
+type:Boolean,
 enum:[true,false],
 default:false,
     },
