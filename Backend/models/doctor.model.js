@@ -132,18 +132,19 @@ doctorSchema.methods = {
   // This will generate a token for password reset
   generatePasswordResetToken: async function () {
     // creating a random token using node's built-in crypto module
-    const resetToken = crypto.randomBytes(20).toString('hex');
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Again using crypto module to hash the generated resetToken with sha256 algorithm and storing it in database
+    // Hash the OTP using SHA-256 algorithm and store it in the database
     this.forgotPasswordToken = crypto
       .createHash('sha256')
-      .update(resetToken)
+      .update(otp)
       .digest('hex');
 
-    // Adding forgot password expiry to 15 minutes
+    // Set the OTP expiry time to 15 minutes
     this.forgotPasswordExpiry = Date.now() + 15 * 60 * 1000;
 
-    return resetToken;
+    // Return the plain OTP (not hashed)
+    return otp;
   },
 };
 

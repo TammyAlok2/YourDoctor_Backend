@@ -202,7 +202,6 @@ export const getLoggedInUserDetails = asyncHandler(async (req, res, _next) => {
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   // Extracting email from request body
   const { email } = req.body;
-  //console.log(email)
 
   // If no email send email required message
   if (!email) {
@@ -217,26 +216,16 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     return next(new AppError("Email not registered", 400));
   }
 
-  // Generating the reset token via the method we have in user model
-  const resetToken = await user.generatePasswordResetToken();
+  // Generating the OTP via the method we created earlier
+  const otp = await user. generatePasswordResetToken();
+  console.log(otp)
 
-  // Saving the forgotPassword* to DB
+  // Saving the forgotPassword* fields to DB
   await user.save();
 
-  // constructing a url to send the correct data
-  /**HERE
-   * req.protocol will send if http or https
-   * req.get('host') will get the hostname
-   * the rest is the route that we will create to verify if token is correct or not
-   */
-  // const resetPasswordUrl = `${req.protocol}://${req.get(
-  //   "host"
-  // )}/api/v1/user/reset/${resetToken}`;
-  const resetPasswordUrl = `${process.env.FRONTEND_URL}user/reset-password/${resetToken}`;
-
-  // We here need to send an email to the user with the token
-  const subject = "Reset Password";
-  const message = `You can reset your password by clicking <a href=${resetPasswordUrl} target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this, kindly ignore.`;
+  // We need to send an email to the user with the OTP
+  const subject = "Your Password Reset OTP";
+  const message = `Your OTP for resetting your password is: ${otp}\n\nThis OTP is valid for 15 minutes.\nIf you did not request this, please ignore this email.`;
 
   try {
     await sendEmail(email, subject, message);
@@ -244,7 +233,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     // If email sent successfully send the success response
     res.status(200).json({
       success: true,
-      message: `Reset password token has been sent to ${email} successfully`,
+      message: `Password reset OTP has been sent to ${email} successfully`,
     });
   } catch (error) {
     // If some error happened we need to clear the forgotPassword* fields in our DB
@@ -261,6 +250,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
     );
   }
 });
+
 
 /**
  * @RESET_PASSWORD
