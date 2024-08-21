@@ -251,7 +251,34 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
+export const tokenCheck =asyncHandler(async(req,res,next)=>{
 
+  const {resetToken} = req.params;
+  const forgotPasswordToken = crypto
+  .createHash("sha256")
+  .update(resetToken)
+  .digest("hex");
+
+  console.log(forgotPasswordToken);
+
+  // Checking if token matches in DB and if it is still valid(Not expired)
+  const user = await Doctor.findOne({
+    forgotPasswordToken,
+    forgotPasswordExpiry: { $gt: Date.now() }, // $gt will help us check for greater than value, with this we can check if token is valid or expired
+  });
+
+  // If not found or expired send the response
+  if (!user) {
+    return next(
+      new AppError("Token is invalid or expired, please try again", 400)
+    );
+  }
+  res.status(200).json({
+    success: true,
+    message: "Otp matched  successfully",
+  });
+
+})
 /**
  * @RESET_PASSWORD
  * @ROUTE @POST {{URL}}/api/v1/user/reset/:resetToken

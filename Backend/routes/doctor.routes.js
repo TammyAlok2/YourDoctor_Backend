@@ -14,6 +14,7 @@ import {
   activeStatus,
   updateAppointmentByDoctor,
   updateDoctorFees,
+  tokenCheck,
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -32,6 +33,7 @@ router.post("/logout", logoutUser);
 router.get("/me", isLoggedIn, getLoggedInUserDetails);
 router.post("/reset", forgotPassword);
 router.post("/reset/:resetToken", resetPassword);
+router.post("/reset/token-check/:resetToken",tokenCheck)
 router.post("/change-password", isLoggedIn, changePassword);
 router.put("/update-profile", isLoggedIn, upload.single("avatar"), updateUser);
 router.get("/myAppointments", isLoggedIn, getAppointments);
