@@ -33,7 +33,7 @@ router.get("/me", isLoggedIn, getLoggedInUserDetails);
 router.post("/reset", forgotPassword);
 router.post("/reset/:resetToken", resetPassword);
 router.post("/change-password", isLoggedIn, changePassword);
-router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
+router.put("/update-profile", isLoggedIn, upload.single("avatar"), updateUser);
 router.get("/myAppointments", isLoggedIn, getAppointments);
 
 router.post("/newAppointmentByDoctor", isLoggedIn, newAppointmentByDoctor);
