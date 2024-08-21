@@ -375,23 +375,25 @@ export const changePassword = asyncHandler(async (req, res, next) => {
  */
 export const updateUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
-  const { fullName } = req.body;
-  const { id } = req.params;
+  const { fullName,description,address,pincode,mobileNumber } = req.body;
+  const id = req.user.id;
 
-  const user = await Doctor.findById(id);
+  const doctor = await Doctor.findById(id);
 
-  if (!user) {
+  if (!doctor) {
     return next(new AppError("Invalid user id or user does not exist"));
   }
 
-  if (fullName) {
-    user.fullName = fullName;
-  }
+  doctor.fullName = fullName;
+  doctor.description = description;
+  doctor.address = address;
+  doctor.pincode = pincode;
+  doctor.mobileNumber = mobileNumber;
 
   // Run only if user sends a file
   if (req.file) {
     // Deletes the old image uploaded by the user
-    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+    await cloudinary.v2.uploader.destroy(doctor.avatar.public_id);
 
     try {
       const result = await cloudinary.v2.uploader.upload(req.file.path, {
@@ -405,8 +407,8 @@ export const updateUser = asyncHandler(async (req, res, next) => {
       // If success
       if (result) {
         // Set the public_id and secure_url in DB
-        user.avatar.public_id = result.public_id;
-        user.avatar.secure_url = result.secure_url;
+        doctor.avatar.public_id = result.public_id;
+        doctor.avatar.secure_url = result.secure_url;
 
         // After successful upload remove the file from local storage
         fs.rm(`uploads/${req.file.filename}`);
@@ -419,12 +421,13 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   }
 
   // Save the user object
-  await user.save();
+  await doctor.save();
 
-  res.status(200).json({
-    success: true,
-    message: "User details updated successfully",
-  });
+  res
+  .status(201)
+  .json(
+    new ApiResponse(200, doctor, " Doctor profile update successfully ")
+  );
 });
 
 export const activeStatus = asyncHandler(async (req,res,next)=>{

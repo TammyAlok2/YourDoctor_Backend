@@ -57,6 +57,7 @@ required:true,
     },
     pincode:{
       type:Number,
+      required:true
     },
     status:{
 type:Boolean,
