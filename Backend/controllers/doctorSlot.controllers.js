@@ -3,9 +3,12 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import AppError from '../utils/AppError.js';
 import asyncHandler from '../middlewares/asyncHandler.middleware.js';
 
+
 export const createSchedule = asyncHandler(async (req, res, next) => {
     const doctorId = req.user.id;
   
+
+
     if (!doctorId) {
       throw new AppError("Doctor not found or logged in");
     }

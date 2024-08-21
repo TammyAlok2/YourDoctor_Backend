@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { kStringMaxLength } from 'buffer';
 
 const doctorSchema = new Schema(
   {
@@ -59,12 +60,29 @@ type:Boolean,
 enum:[true,false],
 default:false,
     },
-    fees:[
-      {
-        type:Number,
-
+    fees: {
+      firstVisitFee: {
+        type: String,
+       
+      },
+      secondVisitFee: {
+        type: String,
+        
+      },
+      visitUnder7DaysFee: {
+        type: String,
+       
+      },
+      emergencyFee1: {
+        type:String,
+      
+      },
+      emergencyFee2: {
+        type: String,
+       
       }
-    ],
+    },
+  
        appointments:[
         {
            type: Schema.Types.ObjectId,

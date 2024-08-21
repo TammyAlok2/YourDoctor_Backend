@@ -12,11 +12,17 @@ import {
   getAppointments,
   newAppointmentByDoctor,
   activeStatus,
-  updateAppointmentByDoctor
+  updateAppointmentByDoctor,
+  updateDoctorFees,
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
-import { allSchedule, createSchedule, getScheduleForDate, updateSchedule } from "../controllers/doctorSlot.controllers.js";
+import {
+  allSchedule,
+  createSchedule,
+  getScheduleForDate,
+  updateSchedule,
+} from "../controllers/doctorSlot.controllers.js";
 
 const router = Router();
 
@@ -28,15 +34,20 @@ router.post("/reset", forgotPassword);
 router.post("/reset/:resetToken", resetPassword);
 router.post("/change-password", isLoggedIn, changePassword);
 router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
-router.get('/myAppointments',isLoggedIn,getAppointments)
+router.get("/myAppointments", isLoggedIn, getAppointments);
 
-router.post('/newAppointmentByDoctor',isLoggedIn,newAppointmentByDoctor)
-router.post('/updateAppointmentByDoctor/:appointmentId',isLoggedIn,updateAppointmentByDoctor)
-router.get("/allDoctors",getAllDoctors)
-router.post('/createSchedule',isLoggedIn,createSchedule)
-router.post('updateSchedule',isLoggedIn,updateSchedule)
-router.get('/getSchedule/:date',isLoggedIn,getScheduleForDate)
-router.get('/allSchedule',isLoggedIn,allSchedule)
-router.post('/doctor-status',isLoggedIn,activeStatus)
+router.post("/newAppointmentByDoctor", isLoggedIn, newAppointmentByDoctor);
+router.post(
+  "/updateAppointmentByDoctor/:appointmentId",
+  isLoggedIn,
+  updateAppointmentByDoctor
+);
+router.get("/allDoctors", getAllDoctors);
+router.post("/createSchedule", isLoggedIn, createSchedule);
+router.post("updateSchedule", isLoggedIn, updateSchedule);
+router.get("/getSchedule/:date", isLoggedIn, getScheduleForDate);
+router.get("/allSchedule", isLoggedIn, allSchedule);
+router.post("/doctor-status", isLoggedIn, activeStatus);
+router.post("/update-fees", isLoggedIn,updateDoctorFees);
 
 export default router;

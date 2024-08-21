@@ -570,3 +570,29 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
       new ApiResponse(200, appointment, "Appointment update by doctor successfully ")
     );
 });
+
+// Update doctor fees
+export const updateDoctorFees = async (req, res) => {
+  try {
+    const { firstVisitFee, secondVisitFee, visitUnder7DaysFee, emergencyFee1, emergencyFee2 } = req.body;
+    
+    const doctor = await Doctor.findById(req.user.id);
+    if (!doctor) {
+      return res.status(404).json({ message: 'Doctor not found' });
+    }
+    
+    doctor.fees = {
+      firstVisitFee,
+      secondVisitFee,
+      visitUnder7DaysFee,
+      emergencyFee1,
+      emergencyFee2
+    };
+    
+    await doctor.save();
+    
+    res.status(200).json({ message: 'Fees updated successfully', doctor });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
