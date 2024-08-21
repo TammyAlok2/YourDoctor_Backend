@@ -55,6 +55,9 @@ required:true,
       type:String,
       required:true
     },
+    pincode:{
+      type:Number,
+    },
     status:{
 type:Boolean,
 enum:[true,false],
