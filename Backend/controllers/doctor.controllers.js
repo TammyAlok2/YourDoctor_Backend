@@ -572,7 +572,7 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
 });
 
 // Update doctor fees
-export const updateDoctorFees = async (req, res) => {
+export const updateDoctorFees = asyncHandler(async (req, res) => {
   try {
     const { firstVisitFee, secondVisitFee, visitUnder7DaysFee, emergencyFee1, emergencyFee2 } = req.body;
     
@@ -591,8 +591,12 @@ export const updateDoctorFees = async (req, res) => {
     
     await doctor.save();
     
-    res.status(200).json({ message: 'Fees updated successfully', doctor });
+    res
+    .status(201)
+    .json(
+      new ApiResponse(200, doctor, "fees updated  successfully ")
+    );
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    throw new AppError(400, "Unable to add fees ");
   }
-};
+});
