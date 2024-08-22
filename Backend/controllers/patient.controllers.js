@@ -361,7 +361,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
  */
 export const updateUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
-  const { fullName } = req.body;
+  const { fullName,mobile } = req.body;
   const { id } = req.params;
 
   const user = await User.findById(id);
@@ -370,8 +370,9 @@ export const updateUser = asyncHandler(async (req, res, next) => {
     return next(new AppError("Invalid user id or user does not exist"));
   }
 
-  if (fullName) {
+  if (fullName && mobile) {
     user.fullName = fullName;
+    user.mobile = mobile;
   }
 
   // Run only if user sends a file
