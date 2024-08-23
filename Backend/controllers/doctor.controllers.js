@@ -30,6 +30,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     description,
     mobileNumber,
     address,
+    pincode
   } = req.body;
   console.log(fullName, email, password, specialist);
   // Check if the data is there or not, if not throw error message
@@ -40,7 +41,8 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     !specialist ||
     !description ||
     !mobileNumber ||
-    !address
+    !address ||
+    !pincode
   ) {
     return next(new AppError("All fields are required", 400));
   }
@@ -62,6 +64,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     description,
     mobileNumber,
     address,
+    pincode,
     avatar: {
       public_id: email,
       secure_url:
