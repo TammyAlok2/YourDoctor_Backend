@@ -25,4 +25,5 @@ router.post("/change-password", isLoggedIn, changePassword);
 router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
 router.post("/appointment/:doctorId",isLoggedIn,newAppointment)
 
+
 export default router;
