@@ -8,7 +8,7 @@ const slotSchema = new Schema({
     required:true,
   },
   date: {
-    type: String,
+    type: Date,
     required: true,
     trim:true,
     
@@ -36,21 +36,34 @@ const slotSchema = new Schema({
         
       },
 
-      patients: [
-        {
-          patientId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Appointment',
-          },
-          patientName: String,
-          patientPhone: String,
-        },
-      ],
+      
     
     }
   ]
 });
 
-const DoctorSchedule = model('SlotSchema', slotSchema);
+const DoctorSchedule = model('DoctorSchedule', slotSchema);
 
-export default DoctorSchedule
+const leaveSchema = new Schema({
+  doctorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Doctor',
+    required: true,
+  },
+  startDate: {
+    type: Date,
+    required: true,
+  },
+  endDate: {
+    type: Date,
+    required: true,
+  },
+  reason: {
+    type: String,
+    trim: true,
+  }
+});
+
+const DoctorLeave = model('DoctorLeave', leaveSchema);
+
+export { DoctorSchedule, DoctorLeave };

@@ -1,12 +1,5 @@
 import { Schema ,model } from "mongoose";
 
-
-
-
-
-
-
-
 const appointmentSchema = new Schema(
   {
     doctorId:{
@@ -62,7 +55,11 @@ type:Number,
     patientId:{
       type:String,
       required:true,
-    }
+    },
+    slotId: {
+      type: Schema.Types.ObjectId,
+      ref: 'DoctorSchedule.slots',
+    },
   },
   {
     timestamps: true,
