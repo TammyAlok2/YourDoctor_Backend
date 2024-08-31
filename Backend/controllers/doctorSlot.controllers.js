@@ -31,9 +31,6 @@ export const updateSchedule = async (req, res) => {
 };
 
 
-let v1 = new Date('13/12/24') 
-let v2 = new Date('14/10/24')
-console.log( v1>=v2 )
 
 
 const isDateInLeave = async (doctorId, date) => {

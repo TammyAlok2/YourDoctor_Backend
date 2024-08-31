@@ -43,10 +43,10 @@ export const createLeave = asyncHandler(async (req, res) => {
     const leave = await DoctorLeave.findOne({ _id: leaveId, doctorId });
   
     if (!leave) {
-      throw new AppError(404, "Leave not found or you don't have permission to delete it");
+      throw new AppError("Leave not found or you don't have permission to delete it", 400);
     }
   
-    await DoctorLeave.findByIdAndDelete(leaveId);
+    await leave.deleteOne();
   
     res.status(200).json(
       new ApiResponse(200, null, "Leave deleted successfully")
