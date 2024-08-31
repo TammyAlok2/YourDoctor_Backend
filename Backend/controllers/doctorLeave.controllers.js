@@ -4,37 +4,65 @@ import AppError from "../utils/AppError.js";
 import asyncHandler from "../middlewares/asyncHandler.middleware.js";
 
 export const createLeave = asyncHandler(async (req, res) => {
-    const doctorId = req.user.id;
-    console.log(doctorId)
-    try {
-       
-      const {  startDate, endDate, reason } = req.body;
-      if( !startDate || !endDate){
-        throw new AppError("All fields are required ",400)
-      }
-      
-      const newLeave = new DoctorLeave({
-        doctorId,
-        startDate,
-        endDate,
-        reason
-      });
-  
-      await newLeave.save();
-  
-      // Remove any existing schedules within the leave period
-      await DoctorSchedule.deleteMany({
-        doctorId,
-        date: { $gte: startDate, $lte: endDate }
-      });
-  res.status(200).json(
-     new ApiResponse(200,newLeave,"Leave created Successfully")
-  )
-     
-    } catch (error) {
-     throw new AppError(error,400)
+  const doctorId = req.user.id;
+  console.log(doctorId);
+
+  try {
+    const { startDate, endDate, reason } = req.body;
+
+    if (!startDate || !endDate) {
+      throw new AppError("Start date and end date are required", 400);
     }
-  });
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to beginning of the day for accurate comparison
+
+    if (start >= end) {
+      throw new AppError("Start date must be before end date", 400);
+    }
+
+    if (start < today) {
+      throw new AppError("Cannot create leave for a past date", 400);
+    }
+
+    // Check for existing overlapping leaves
+    const existingLeave = await DoctorLeave.findOne({
+      doctorId,
+      $or: [
+        { startDate: { $lte: end }, endDate: { $gte: start } },
+        { startDate: { $gte: start, $lte: end } },
+        { endDate: { $gte: start, $lte: end } }
+      ]
+    });
+
+    if (existingLeave) {
+      throw new AppError("There is an overlapping leave in the specified period", 400);
+    }
+
+    const newLeave = new DoctorLeave({
+      doctorId,
+      startDate: start,
+      endDate: end,
+      reason
+    });
+
+    await newLeave.save();
+
+    // Remove any existing schedules within the leave period
+    await DoctorSchedule.deleteMany({
+      doctorId,
+      date: { $gte: start, $lte: end }
+    });
+
+    res.status(200).json(
+      new ApiResponse(200, newLeave, "Leave created successfully")
+    );
+  } catch (error) {
+    throw new AppError(error.message || "Error creating leave", error.statusCode || 400);
+  }
+});
 
   export const deleteLeave = asyncHandler(async (req, res, next) => {
     const { leaveId } = req.params;

@@ -526,7 +526,7 @@ export const newAppointment = asyncHandler(async (req, res) => {
       appointment: newAppointment,
     });
   } catch (error) {
-    throw new AppError(400, "failed to create appointment ");
+    throw new AppError( "failed to create appointment ",400);
   }
 });
 
@@ -535,7 +535,7 @@ export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
   const { date } = req.body;
 
   if (!doctorId) {
-    throw new AppError(400, "Doctor not found ");
+    throw new AppError( "Doctor not found ",400);
   }
 
   const formattedDate = new Date(date);
