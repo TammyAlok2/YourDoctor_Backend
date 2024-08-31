@@ -133,7 +133,7 @@ export const allSchedule = asyncHandler(async (req, res, next) => {
   const schedules = await DoctorSchedule.find({ doctorId });
 
   if (!schedules || schedules.length === 0) {
-    throw new AppError(400, "No schedules found");
+    throw new AppError( "No schedules found",400);
   }
 
   // Filter out schedules during leave periods
