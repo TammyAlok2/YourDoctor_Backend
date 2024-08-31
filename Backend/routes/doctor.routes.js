@@ -21,9 +21,10 @@ import upload from "../middlewares/multer.middleware.js";
 import {
   allSchedule,
   createSchedule,
-  getScheduleForDate,
+  getScheduleByDate,
   updateSchedule,
 } from "../controllers/doctorSlot.controllers.js";
+import { createLeave } from "../controllers/doctorLeave.controllers.js";
 
 const router = Router();
 
@@ -47,9 +48,12 @@ router.post(
 router.get("/allDoctors", getAllDoctors);
 router.post("/createSchedule", isLoggedIn, createSchedule);
 router.post("updateSchedule", isLoggedIn, updateSchedule);
-router.get("/getSchedule/:date", isLoggedIn, getScheduleForDate);
+
 router.get("/allSchedule", isLoggedIn, allSchedule);
+router.get('/getScheduleByDate',isLoggedIn,getScheduleByDate)
 router.post("/doctor-status", isLoggedIn, activeStatus);
 router.post("/update-fees", isLoggedIn,updateDoctorFees);
+
+router.post("/createLeave",isLoggedIn,createLeave)
 
 export default router;
