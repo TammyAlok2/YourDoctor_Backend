@@ -24,7 +24,7 @@ import {
   getScheduleByDate,
   updateSchedule,
 } from "../controllers/doctorSlot.controllers.js";
-import { createLeave } from "../controllers/doctorLeave.controllers.js";
+import { createLeave, getLeaves } from "../controllers/doctorLeave.controllers.js";
 
 const router = Router();
 
@@ -55,5 +55,6 @@ router.post("/doctor-status", isLoggedIn, activeStatus);
 router.post("/update-fees", isLoggedIn,updateDoctorFees);
 
 router.post("/createLeave",isLoggedIn,createLeave)
+router.get("/allLeave",isLoggedIn,getLeaves)
 
 export default router;
