@@ -531,41 +531,67 @@ export const newAppointment = asyncHandler(async (req, res) => {
 });
 
 export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
-  const {doctorId} = req.params;
-  const { date } = req.body;
+  try {
+    const { doctorId } = req.params;
+    const { date } = req.body;
 
-  if (!doctorId) {
-    throw new AppError( "Doctor not found ",400);
+    // Validate doctorId
+    if (!doctorId) {
+      throw new AppError("Doctor ID is required", 400);
+    }
+
+    // Validate date
+    if (!date) {
+      throw new AppError("Date is required", 400);
+    }
+
+    const formattedDate = new Date(date);
+
+    // Check if the date is valid
+    if (isNaN(formattedDate.getTime())) {
+      throw new AppError("Invalid date format", 400);
+    }
+
+    console.log(date);
+
+    // Check if the doctor is on leave on the given date
+    const leave = await DoctorLeave.findOne({
+      doctorId,
+      startDate: { $lte: formattedDate },
+      endDate: { $gte: formattedDate },
+    });
+
+    if (leave) {
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            null,
+            `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
+          )
+        );
+    }
+
+    // Find the schedule for the given date
+    const schedule = await DoctorSchedule.findOne({
+      doctorId,
+      date,
+    });
+
+    if (!schedule) {
+      return res
+        .status(404)
+        .json(new ApiResponse(404, null, "No schedule found for the given date"));
+    }
+
+    res.status(200).json(new ApiResponse(200, schedule, "Schedule found"));
+  } catch (error) {
+    if (error instanceof AppError) {
+      res.status(error.statusCode).json(new ApiResponse(error.statusCode, null, error.message));
+    } else {
+      console.error("Unexpected error:", error);
+      res.status(500).json(new ApiResponse(500, null, "An unexpected error occurred"));
+    }
   }
-
-  const formattedDate = new Date(date);
-  console.log(date)
-
-  // Check if the doctor is on leave on the given date
-  const leave = await DoctorLeave.findOne({
-    doctorId,
-    startDate: { $lte: formattedDate },
-    endDate: { $gte: formattedDate },
-  });
- 
-  if (leave) {
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          null,
-          `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
-        )
-      );
-  }
-
-  // Find the schedule for the given date
-  const schedule = await DoctorSchedule.findOne({
-    doctorId,
-    date,
-  });
-
-
-  res.status(200).json(new ApiResponse(200, schedule, "Schedule found"));
 });
