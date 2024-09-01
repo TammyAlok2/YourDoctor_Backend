@@ -66,6 +66,12 @@ export const createSchedule = asyncHandler(async (req, res, next) => {
       throw new AppError("Invalid date format. Please provide the date in a valid format (e.g., YYYY-MM-DD)", 400);
     }
 
+    const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0);
+if (formattedDate < currentDate) {
+  throw new AppError("Cannot create schedule for past dates. Please choose a present or future date", 400);
+}
+
     const isOnLeave = await isDateInLeave(doctorId, formattedDate);
     if (isOnLeave) {
       throw new AppError("Cannot create schedule during leave period. Please choose a different date", 400);
