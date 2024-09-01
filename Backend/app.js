@@ -14,6 +14,13 @@ import 'dotenv/config'
 config();
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',     // Local development
+  'https://your-web-app-domain.com', // Production web app
+  'capacitor://localhost',    // Capacitor (if you're using it)
+  'ionic://localhost',        // Ionic (if you're using it)
+  'http://localhost',         // Catch-all for various local development scenarios
+];
 // Middlewares
 // Built-In
 app.use(express.json());
