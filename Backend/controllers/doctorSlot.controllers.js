@@ -133,7 +133,7 @@ export const allSchedule = asyncHandler(async (req, res, next) => {
 export const getScheduleByDate = asyncHandler(async (req, res, next) => {
   try {
     const doctorId = req.user.id;
-    const { date } = req.body;
+    const {date} = req.params;
 
     if (!doctorId) {
       throw new AppError("Doctor not found or not logged in. Please log in and try again", 400);

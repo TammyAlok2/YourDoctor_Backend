@@ -50,7 +50,7 @@ router.post("/createSchedule", isLoggedIn, createSchedule);
 router.post("updateSchedule", isLoggedIn, updateSchedule);
 
 router.get("/allSchedule", isLoggedIn, allSchedule);
-router.get('/getScheduleByDate',isLoggedIn,getScheduleByDate)
+router.get('/getScheduleByDate/:date',isLoggedIn,getScheduleByDate)
 router.post("/doctor-status", isLoggedIn, activeStatus);
 router.post("/update-fees", isLoggedIn,updateDoctorFees);
 

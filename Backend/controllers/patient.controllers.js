@@ -533,7 +533,7 @@ export const newAppointment = asyncHandler(async (req, res) => {
 export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
   try {
     const { doctorId } = req.params;
-    const { date } = req.body;
+    const {date} = req.body;
 
     // Validate doctorId
     if (!doctorId) {
