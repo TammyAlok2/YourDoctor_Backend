@@ -1,65 +1,54 @@
-import cookieParser from 'cookie-parser';
 import express from 'express';
-import { config } from 'dotenv';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
-
 import morgan from 'morgan';
+import dotenv from 'dotenv';
 import errorMiddleware from './middlewares/error.middleware.js';
-import dotenv from 'dotenv'
-import 'dotenv/config'
-
-
-
-
-config();
-const app = express();
-
-const allowedOrigins = [
-  'http://localhost:3000',     // Local development
-  'https://your-web-app-domain.com', // Production web app
-  'capacitor://localhost',    // Capacitor (if you're using it)
-  'ionic://localhost',        // Ionic (if you're using it)
-  'http://localhost',         // Catch-all for various local development scenarios
-];
-// Middlewares
-// Built-In
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-app.use(morgan('dev'));
-app.use(cookieParser());
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  // For mobile apps or Postman which might not send an origin header
-  else if (!origin) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-  credentials: true,
-  next();
-});
-
-// Third-Party
-
-// Server Status Check Route
-app.get('/ping', (_req, res) => {
-  res.send('Pong');                                           
-});
-
-// Import all routes
 import patientRoutes from './routes/patient.routes.js';
 import doctorRoutes from './routes/doctor.routes.js';
 
+dotenv.config();
+
+const app = express();
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://your-web-app-domain.com',
+  'capacitor://localhost',
+  'ionic://localhost',
+  'http://localhost',
+];
+
+// Middlewares
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use(cookieParser());
+
+// CORS configuration
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// Server Status Check Route
+app.get('/ping', (_req, res) => {
+  res.send('Pong');
+});
+
+// Routes
 app.use('/api/v1/user', patientRoutes);
-app.use('/api/v1/doctor',doctorRoutes);
+app.use('/api/v1/doctor', doctorRoutes);
 
 // Default catch all route - 404
 app.all('*', (_req, res) => {
@@ -69,6 +58,7 @@ app.all('*', (_req, res) => {
 // Custom error handling middleware
 app.use(errorMiddleware);
 
-
-
 export default app;
+
+
+
