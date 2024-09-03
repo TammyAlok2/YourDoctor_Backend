@@ -13,7 +13,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:3000',
-  'https://your-web-app-domain.com',
+  'https://your-custom-domain.com', // Replace with your actual custom domain
   'capacitor://localhost',
   'ionic://localhost',
   'http://localhost',
@@ -28,18 +28,27 @@ app.use(cookieParser());
 // CORS configuration
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// Cookie settings middleware
+app.use((req, res, next) => {
+  res.cookie = function(name, value, options) {
+    options = options || {};
+    options.sameSite = 'none';
+    options.secure = true; // Ensure this is true for production
+    return express.response.cookie.call(this, name, value, options);
+  };
+  next();
+});
 
 // Server Status Check Route
 app.get('/ping', (_req, res) => {
@@ -59,6 +68,3 @@ app.all('*', (_req, res) => {
 app.use(errorMiddleware);
 
 export default app;
-
-
-
