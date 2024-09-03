@@ -211,11 +211,11 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   // const resetPasswordUrl = `${req.protocol}://${req.get(
   //   "host"
   // )}/api/v1/user/reset/${resetToken}`;
-  const resetPasswordUrl = `${process.env.FRONTEND_URL}user/reset-password/${resetToken}`;
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}user/reset/${resetToken}`;
 
   // We here need to send an email to the user with the token
   const subject = "Reset Password";
-  const message = `You can reset your password by clicking <a href=${resetPasswordUrl} target="_blank">Reset your password</a>\nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this, kindly ignore.`;
+  const message = `You can reset your password by clicking   <a href=${resetPasswordUrl} target="_blank">Reset your password</a>  \nIf the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this, kindly ignore.`;
 
   try {
     await sendEmail(email, subject, message);
@@ -533,7 +533,9 @@ export const newAppointment = asyncHandler(async (req, res) => {
 export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
   try {
     const { doctorId } = req.params;
-    const {date} = req.body;
+    const {date} = req.params;
+    console.log('date is ',date)
+    console.log('params ',doctorId)
 
     // Validate doctorId
     if (!doctorId) {
@@ -552,7 +554,7 @@ export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
       throw new AppError("Invalid date format", 400);
     }
 
-    console.log(date);
+    console.log(formattedDate);
 
     // Check if the doctor is on leave on the given date
     const leave = await DoctorLeave.findOne({
@@ -562,21 +564,19 @@ export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
     });
 
     if (leave) {
-      return res
-        .status(200)
-        .json(
-          new ApiResponse(
-            200,
-            null,
-            `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
-          )
-        );
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          null,
+          `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
+        )
+      );
     }
 
     // Find the schedule for the given date
     const schedule = await DoctorSchedule.findOne({
       doctorId,
-      date,
+      date: formattedDate,
     });
 
     if (!schedule) {

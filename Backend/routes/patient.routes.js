@@ -25,5 +25,5 @@ router.post("/reset/:resetToken", resetPassword);
 router.post("/change-password", isLoggedIn, changePassword);
 router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
 router.post("/newAppointment/:doctorId",isLoggedIn,newAppointment)
-router.get("/allScheduleByDate/:doctorId",isLoggedIn,getScheduleByDatePatient)
+router.get("/allScheduleByDate/:doctorId/:date",isLoggedIn,getScheduleByDatePatient)
 export default router;
