@@ -12,7 +12,7 @@ mongoose.set("strictQuery", false);
 const connectToDB = async () => {
   try {
     const { connection } = await mongoose.connect(
-      'mongodb+srv://AlokTamrakar:AlokTam2005@yourlabuser.kubaeec.mongodb.net/'
+  process.env.MONGO_URI 
     );
 
     if (connection) {
