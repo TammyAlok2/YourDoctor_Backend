@@ -14,7 +14,7 @@ v2.config({
 // Razorpay configuration
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT ;
 
 
 
