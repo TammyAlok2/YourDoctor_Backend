@@ -356,6 +356,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
 export const updateUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
   const { fullName, mobile } = req.body;
+
   const { id } = req.params;
 
   const user = await User.findById(id);
@@ -364,8 +365,11 @@ export const updateUser = asyncHandler(async (req, res, next) => {
     return next(new AppError("Invalid user id or user does not exist"));
   }
 
-  if (fullName && mobile) {
+  if (fullName) {
     user.fullName = fullName;
+    
+  }
+  if(mobile){
     user.mobile = mobile;
   }
 
@@ -403,8 +407,10 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
+    
     success: true,
     message: "User details updated successfully",
+    user
   });
 });
 
