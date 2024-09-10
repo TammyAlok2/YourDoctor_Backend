@@ -17,6 +17,7 @@ const allowedOrigins = [
   'capacitor://localhost',
   'ionic://localhost',
   'http://localhost',
+  'https://your-lab-user-page-fronted-git-master-yourlabs-projects.vercel.app'
 ];
 
 // Middlewares
@@ -54,6 +55,10 @@ app.use((req, res, next) => {
 app.get('/ping', (_req, res) => {
   res.send('Pong');
 });
+app.get('/',(req,res)=>{
+  console.log('home route')
+  res.send('Home page')
+})
 
 // Routes
 app.use('/api/v1/user', patientRoutes);
