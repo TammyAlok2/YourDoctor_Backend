@@ -17,7 +17,8 @@ const allowedOrigins = [
   'capacitor://localhost',
   'ionic://localhost',
   'http://localhost',
-  'https://yourlab.in'
+  'https://yourlab.in',
+  'www.yourlab.in',
  ];
 
 // Middlewares
