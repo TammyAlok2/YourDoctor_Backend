@@ -13,9 +13,9 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === "production" ? true : false,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   httpOnly: true,
-  SameSite: "none",
+  SameSite: "None",
   path:'/',
-  domain: 'https://yourlab.in'|| 'https://www.yourlab.in/'||'http://localhost:3000',
+  domain: process.env.NODE_ENV === 'production' ? '.yourlab.in' : 'localhost',
 };
 
 /**
