@@ -18,7 +18,7 @@ const allowedOrigins = [
   'ionic://localhost',
   'http://localhost',
   'https://yourlab.in',
-  'www.yourlab.in',
+  'https://www.yourlab.in',
  ];
 
 // Middlewares
