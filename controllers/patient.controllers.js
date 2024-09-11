@@ -15,7 +15,7 @@ const cookieOptions = {
   httpOnly: true,
   SameSite: "None",
   path:'/',
-  domain: process.env.NODE_ENV === 'production' ? '.yourlab.in' : 'localhost',
+  domain: process.env.NODE_ENV === 'production' ? 'yourlab.in' : 'localhost',
 };
 
 /**
