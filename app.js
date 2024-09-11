@@ -17,9 +17,8 @@ const allowedOrigins = [
   'capacitor://localhost',
   'ionic://localhost',
   'http://localhost',
-  'https://your-lab-user-page-fronted-git-master-yourlabs-projects.vercel.app',
-  'https://your-lab-user-page-fronted-8r4d-jpkkexdc2-yourlabs-projects.vercel.app'
-];
+  'https://yourlab.in'
+ ];
 
 // Middlewares
 app.use(express.json());
