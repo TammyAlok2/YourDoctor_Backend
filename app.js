@@ -46,7 +46,10 @@ app.use((req, res, next) => {
   res.cookie = function(name, value, options) {
     options = options || {};
     options.sameSite = 'none';
-    options.secure = true; // Ensure this is true for production
+    options.secure = true;
+    options.httpOnly = true;
+    // Set the domain to your backend's domain
+    options.domain = 'yourlab.in'; // Replace with your actual domain
     return express.response.cookie.call(this, name, value, options);
   };
   next();
