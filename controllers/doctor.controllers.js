@@ -623,3 +623,4 @@ export const updateDoctorFees = asyncHandler(async (req, res) => {
     throw new AppError(400, "Unable to add fees ");
   }
 });
+

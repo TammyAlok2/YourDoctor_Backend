@@ -43,17 +43,31 @@ app.use(cors({
 
 // Cookie settings middleware
 app.use((req, res, next) => {
-  res.cookie = function(name, value, options) {
-    options = options || {};
-    options.sameSite = 'none';
-    options.secure = true;
+  res.cookie = function(name, value, options = {}) {
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    // Apply common cookie settings
     options.httpOnly = true;
-    // Set the domain to your backend's domain
-    options.domain = 'yourlab.in'; // Replace with your actual domain
+
+    if (isProduction) {
+      // Production settings for HTTPS and cross-site cookies
+      options.sameSite = 'none';
+      options.secure = true;
+      options.domain = 'yourlab.in'; // Replace with your actual production domain
+    } else {
+      // Local development settings
+      options.sameSite = 'lax'; // For local development, don't use 'none'
+      options.secure = false;   // Cookies should work in non-HTTPS environments
+      delete options.domain;    // Do not set domain for localhost
+    }
+
+    // Call the original cookie method
     return express.response.cookie.call(this, name, value, options);
   };
+
   next();
 });
+
 
 // Server Status Check Route
 app.get('/ping', (_req, res) => {

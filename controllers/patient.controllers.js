@@ -7,15 +7,18 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import User from "../models/user.models.js";
 import sendEmail from "../utils/sendEmail.js";
 import Appointment from "../models/appointment.models.js";
-import { DoctorSchedule ,DoctorLeave} from "../models/doctorSchedule.models.js";
+import {
+  DoctorSchedule,
+  DoctorLeave,
+} from "../models/doctorSchedule.models.js";
 
 const cookieOptions = {
   secure: process.env.NODE_ENV === "production" ? true : false,
   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   httpOnly: true,
   SameSite: "None",
-  path:'/',
-  domain: process.env.NODE_ENV === 'production' ? 'yourlab.in' : 'localhost',
+  path: "/",
+  domain: process.env.NODE_ENV === "production" ? "yourlab.in" : "localhost",
 };
 
 /**
@@ -88,7 +91,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
 
   // Generating a JWT token
   const token = await user.generateJWTToken();
-  
 
   // Setting the password to undefined so it does not get sent in the response
   user.password = undefined;
@@ -97,7 +99,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   res.cookie("token", token, cookieOptions);
 
   // If all good send the response to the frontend
-  res.status(201).json(new ApiResponse(200, { user, token }, "User created successfully"));
+  res
+    .status(201)
+    .json(new ApiResponse(200, { user, token }, "User created successfully"));
 });
 
 /**
@@ -134,7 +138,9 @@ export const loginUser = asyncHandler(async (req, res, next) => {
   res.cookie("token", token, cookieOptions);
 
   // If all good send the response to the frontend
-  res.status(201).json(new ApiResponse(200, { user, token }, "Logged in  successfully"));
+  res
+    .status(201)
+    .json(new ApiResponse(200, { user, token }, "Logged in  successfully"));
 });
 
 /**
@@ -368,9 +374,8 @@ export const updateUser = asyncHandler(async (req, res, next) => {
 
   if (fullName) {
     user.fullName = fullName;
-    
   }
-  if(mobile){
+  if (mobile) {
     user.mobile = mobile;
   }
 
@@ -408,10 +413,9 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   await user.save();
 
   res.status(200).json({
-    
     success: true,
     message: "User details updated successfully",
-    user
+    user,
   });
 });
 
@@ -534,16 +538,16 @@ export const newAppointment = asyncHandler(async (req, res) => {
       appointment: newAppointment,
     });
   } catch (error) {
-    throw new AppError( "failed to create appointment ",400);
+    throw new AppError("failed to create appointment ", 400);
   }
 });
 
 export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
   try {
     const { doctorId } = req.params;
-    const {date} = req.params;
-    console.log('date is ',date)
-    console.log('params ',doctorId)
+    const { date } = req.params;
+    console.log("date is ", date);
+    console.log("params ", doctorId);
 
     // Validate doctorId
     if (!doctorId) {
@@ -572,13 +576,15 @@ export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
     });
 
     if (leave) {
-      return res.status(200).json(
-        new ApiResponse(
-          200,
-          null,
-          `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
-        )
-      );
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            null,
+            `Doctor is on leave from ${leave.startDate.toDateString()} to ${leave.endDate.toDateString()}`
+          )
+        );
     }
 
     // Find the schedule for the given date
@@ -590,16 +596,53 @@ export const getScheduleByDatePatient = asyncHandler(async (req, res, next) => {
     if (!schedule) {
       return res
         .status(404)
-        .json(new ApiResponse(404, null, "No schedule found for the given date"));
+        .json(
+          new ApiResponse(404, null, "No schedule found for the given date")
+        );
     }
 
     res.status(200).json(new ApiResponse(200, schedule, "Schedule found"));
   } catch (error) {
     if (error instanceof AppError) {
-      res.status(error.statusCode).json(new ApiResponse(error.statusCode, null, error.message));
+      res
+        .status(error.statusCode)
+        .json(new ApiResponse(error.statusCode, null, error.message));
     } else {
       console.error("Unexpected error:", error);
-      res.status(500).json(new ApiResponse(500, null, "An unexpected error occurred"));
+      res
+        .status(500)
+        .json(new ApiResponse(500, null, "An unexpected error occurred"));
+    }
+  }
+});
+
+export const allAppointmentByUser = asyncHandler(async (req, res, next) => {
+  // getting the user id
+  const userId = req.user.id;
+
+  try {
+    const appointments = await Appointment.find({ userId });
+    if (!appointments) {
+      return res
+        .status(404)
+        .json(new ApiResponse(404, null, "No Appointemnts found "));
+    }
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, appointments, "Appointments  found Successfully ")
+      );
+  } catch (error) {
+    if (error instanceof AppError) {
+      res
+        .status(error.statusCode)
+        .json(new ApiResponse(error.statusCode, null, error.message));
+    } else {
+      console.error("Unexpected error:", error);
+      res
+        .status(500)
+        .json(new ApiResponse(500, null, "An unexpected error occurred"));
     }
   }
 });
