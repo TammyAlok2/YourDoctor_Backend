@@ -11,7 +11,8 @@ export const registerNeedHelp = asyncHandler(async(req,res)=>{
     if(!name || !number){
         throw new AppError("Name and number required",400)
     }
-    const date = new Date.now()
+    const date = Date.now()
+    console.log(date)
 
     const enquiry = await patientNeed.create({
         name,number,date
