@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import errorMiddleware from './middlewares/error.middleware.js';
 import patientRoutes from './routes/patient.routes.js';
 import doctorRoutes from './routes/doctor.routes.js';
+import adminRoutes from './routes/admin.routes.js'
 
 dotenv.config();
 
@@ -81,6 +82,7 @@ app.get('/',(req,res)=>{
 // Routes
 app.use('/api/v1/user', patientRoutes);
 app.use('/api/v1/doctor', doctorRoutes);
+app.use('/api/v1/admin',adminRoutes);
 
 // Default catch all route - 404
 app.all('*', (_req, res) => {

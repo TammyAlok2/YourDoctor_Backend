@@ -10,6 +10,10 @@ const patientNeedHelp = new Schema({
     type: Number,
     required: true,
   },
+  date: {
+    type: Date,
+    
+  },
 });
 
 
@@ -25,6 +29,10 @@ const doctorNeedHelp = new Schema({
       number: {
         type: Number,
         required: true,
+      },
+      date: {
+        type: Date,
+        
       },
 })
 

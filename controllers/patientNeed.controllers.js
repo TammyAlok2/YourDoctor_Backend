@@ -11,13 +11,25 @@ export const registerNeedHelp = asyncHandler(async(req,res)=>{
     if(!name || !number){
         throw new AppError("Name and number required",400)
     }
+    const date = new Date.now()
 
     const enquiry = await patientNeed.create({
-        name,number
+        name,number,date
     })
 
     res.status(201).json(
         new ApiResponse(200,"Enquiry send successfully",enquiry)
+    )
+
+})
+
+export const getAllNeedHelp = asyncHandler(async(req,res)=>{
+
+
+    const enquiry = await patientNeed.find({});
+ 
+    res.status(201).json(
+        new ApiResponse(200,"Enquiry fetched successfully",enquiry)
     )
 
 })
