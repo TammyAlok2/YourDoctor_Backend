@@ -30,7 +30,7 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     description,
     mobileNumber,
     address,
-    pincode
+    pincode,fees
   } = req.body;
   console.log(fullName, email, password, specialist);
   // Check if the data is there or not, if not throw error message
@@ -65,6 +65,9 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     mobileNumber,
     address,
     pincode,
+    fees:{
+    firstVisitFee : fees,
+    },
     avatar: {
       public_id: email,
       secure_url:
@@ -395,7 +398,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
  */
 export const updateUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
-  const { fullName,description,address,pincode,mobileNumber } = req.body;
+  const { fullName,description,address,pincode,mobileNumber,fees } = req.body;
   const id = req.user.id;
 
   const doctor = await Doctor.findById(id);
@@ -409,6 +412,7 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   doctor.address = address;
   doctor.pincode = pincode;
   doctor.mobileNumber = mobileNumber;
+  doctor.fees.firstVisitFee = fees;
 
   // Run only if user sends a file
   if (req.file) {
