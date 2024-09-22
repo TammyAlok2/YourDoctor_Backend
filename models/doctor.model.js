@@ -11,7 +11,6 @@ const doctorSchema = new Schema(
       type: String,
       required: [true, 'Name is required'],
       minlength: [5, 'Name must be at least 5 characters'],
-      lowercase: true,
       trim: true, // Removes unnecessary spaces
     },
     email: {
