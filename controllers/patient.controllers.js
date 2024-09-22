@@ -474,11 +474,7 @@ export const newAppointment = asyncHandler(async (req, res) => {
     !patientPhone ||
     !age ||
     !gender ||
-    !diabetes ||
     !weight ||
-    !bloodPressure ||
-    !weight ||
-    !description ||
     !slotId ||
     !date ||
     !time
