@@ -16,6 +16,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'https://your-custom-domain.com', // Replace with your actual custom domain
   'capacitor://localhost',
+  'https://admin-panel-beta-sepia.vercel.app/',
   'ionic://localhost',
   'http://localhost',
   'https://yourlab.in',
