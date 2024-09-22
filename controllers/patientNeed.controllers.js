@@ -19,7 +19,7 @@ export const registerNeedHelp = asyncHandler(async(req,res)=>{
     })
 
     res.status(201).json(
-        new ApiResponse(200,"Enquiry send successfully",enquiry)
+        new ApiResponse(200,enquiry,"Enquiry send successfully")
     )
 
 })
