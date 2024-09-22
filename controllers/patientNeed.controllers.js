@@ -30,7 +30,7 @@ export const getAllNeedHelp = asyncHandler(async(req,res)=>{
     const enquiry = await patientNeed.find({});
  
     res.status(201).json(
-        new ApiResponse(200,"Enquiry fetched successfully",enquiry)
+        new ApiResponse(200,enquiry,"Enquiry fetched successfully")
     )
 
 })
