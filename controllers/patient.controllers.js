@@ -430,7 +430,7 @@ function generateRandomID(patientName, appointmentDate) {
   const namePart = patientName.slice(0, 2).toUpperCase();
 
   // Extract day, month, and year from the appointmentDate
-  const [day, month, year] = appointmentDate.split("/");
+  const [day, month, year] = appointmentDate.split("-");
 
   // Ensure appointmentMonth is two digits
   const monthPart = ("0" + month).slice(-2);
