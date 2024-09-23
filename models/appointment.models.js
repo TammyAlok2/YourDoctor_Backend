@@ -36,7 +36,6 @@ type:Number,
     },
     description: {
       type: String,
-      required: true,
     },
     date: {
       type: String,
