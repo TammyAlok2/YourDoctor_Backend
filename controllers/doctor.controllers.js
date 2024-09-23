@@ -67,6 +67,13 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     pincode,
     fees:{
     firstVisitFee : fees,
+    secondVisitFee:fees,
+    visitUnder7DaysFee:fees,
+    emergencyFee1:fees,
+    emergencyFee2:fees,
+
+
+
     },
     avatar: {
       public_id: email,
