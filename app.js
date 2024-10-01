@@ -15,6 +15,7 @@ const app = express();
 // Allowed Origins
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://your-production-domain.com',
   'https://yourlab.in',
   'https://www.yourlab.in',
   'https://admin-panel-beta-sepia.vercel.app', // Admin Panel Domain
