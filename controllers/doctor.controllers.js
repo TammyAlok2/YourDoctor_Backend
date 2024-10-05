@@ -405,7 +405,7 @@ export const changePassword = asyncHandler(async (req, res, next) => {
  */
 export const updateUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from the req object
-  const { fullName,description,address,pincode,mobileNumber,fees } = req.body;
+  const { fullName,description,address,pincode,mobileNumber,fees,joinStatus } = req.body;
   const id = req.user.id;
 
   const doctor = await Doctor.findById(id);
@@ -420,6 +420,7 @@ export const updateUser = asyncHandler(async (req, res, next) => {
   doctor.pincode = pincode;
   doctor.mobileNumber = mobileNumber;
   doctor.fees.firstVisitFee = fees;
+  doctor.joinStatus = joinStatus
 
   // Run only if user sends a file
   if (req.file) {
@@ -635,3 +636,18 @@ export const updateDoctorFees = asyncHandler(async (req, res) => {
   }
 });
 
+
+
+export const deleteDoctor = asyncHandler(async (req, res, next) => {
+  const doctor = await Doctor.findById(req.user.id);
+
+  if (!doctor) {
+    return next(new AppError("Doctor not found", 404));
+  }
+
+  await Doctor.findByIdAndDelete(req.user.id);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, doctor, "Doctor deleted successfully"));
+});

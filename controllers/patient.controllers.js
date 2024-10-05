@@ -641,3 +641,19 @@ export const allAppointmentByUser = asyncHandler(async (req, res, next) => {
     }
   }
 });
+
+export const deletePatient = asyncHandler(async (req, res, next) => {
+  const patient = await User.findById(req.user.id);
+
+  if (!patient) {
+    return next(new AppError("Patient not found", 404));
+  }
+
+  await patient.findByIdAndDelete(req.user.id);
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, null, "Patient deleted successfully"));
+});
+
+

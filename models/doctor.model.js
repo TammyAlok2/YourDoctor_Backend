@@ -63,6 +63,12 @@ type:Boolean,
 enum:[true,false],
 default:false,
     },
+    joinStatus:{
+      type:Boolean,
+      enum:[true,false],
+      default:false,
+          },
+          
     fees: {
       firstVisitFee: {
         type: String,

@@ -15,6 +15,7 @@ import {
   updateAppointmentByDoctor,
   updateDoctorFees,
   tokenCheck,
+  deleteDoctor,
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -58,5 +59,7 @@ router.post("/createLeave",isLoggedIn,createLeave)
 
 router.delete("/deleteLeave/:leaveId",isLoggedIn,deleteLeave)
 router.get("/allLeave",isLoggedIn,getLeaves)
+router.delete('/delete',isLoggedIn,deleteDoctor)
+
 
 export default router;
