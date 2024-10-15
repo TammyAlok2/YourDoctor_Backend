@@ -8,6 +8,7 @@ import patientRoutes from "./routes/patient.routes.js";
 import doctorRoutes from "./routes/doctor.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import blogRoutes from "./routes/blogs.route.js";
+import managerRoutes from "./routes/manager.route.js";
 
 dotenv.config();
 
@@ -86,6 +87,7 @@ app.use("/api/v1/user", patientRoutes);
 app.use("/api/v1/doctor", doctorRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/blog", blogRoutes);
+app.use("/api/v1/manager", managerRoutes);
 
 // Server Status Check Route
 app.get("/ping", (_req, res) => {
