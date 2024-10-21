@@ -4,7 +4,22 @@ import { Blog } from "../models/blog.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-//Delete Blog
+//All Blogs
+const allBlogs = asyncHandler(async(req,res)=>{
+  try {
+    const blogs = await Blog.find({});
+    if(!blogs){
+      throw new AppError(401,"Blogs does not found ")
+    }
+    return res.status(200).json(
+      new ApiResponse(200, blogs, "All blogs successfully")
+    )
+
+  } catch (error) {
+    throw new AppError(401,"Blogs does not found ")
+  }
+})
+
 const deleteBlog = asyncHandler(async (req, res) => {
   try {
     const { blogId } = req.params;
@@ -112,7 +127,7 @@ const createBlog = asyncHandler(async (req, res) => {
   //return response
   return res
     .status(201)
-    .json(new ApiResponse(200, blog, "user registered successfully"));
+    .json(new ApiResponse(200, blog, "Blog created  successfully"));
 });
 
 //update image
@@ -183,4 +198,5 @@ export {
   createBlog,
   updateUserAvatar,
   updateUserCoverImage,
+  allBlogs
 };
