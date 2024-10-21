@@ -542,12 +542,14 @@ export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
     bloodPressure,
     diabetes,
     weight,
+  
   } = req.body;
   const patientId = generateRandomID(patientName, date);
   const doctorId = req.user.id;
   if (!patientName || !patientPhone || !age || !gender || !date || !time) {
     throw new AppError(400, "All fields are required ");
   }
+  let mode = "Doctor"
 
   const appointment = await Appointment.create({
     doctorId,
@@ -562,6 +564,7 @@ export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
     bloodPressure,
     diabetes,
     weight,
+    mode
   });
   if (!appointment) {
     return next(new AppError("Failed to create appointment", 400));

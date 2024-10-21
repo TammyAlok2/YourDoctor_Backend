@@ -49,6 +49,11 @@ type:Number,
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    mode:{
+type :String,
+enum:["Online","Doctor","Attender"],
+default:"Doctor",
+    },
     status: {
       type: String,
       enum: ["Pending", "Accepted", "Rejected"],

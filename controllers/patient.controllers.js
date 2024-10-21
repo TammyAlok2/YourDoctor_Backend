@@ -480,11 +480,12 @@ export const newAppointment = asyncHandler(async (req, res) => {
   ) {
     throw new AppError(400, "All field are required ");
   }
-
+ let mode = "Online"
   try {
     // Find the slot and check availability
     const userId = req.user.id;
-
+   
+console.log(userId)
     const doctorSchedule = await DoctorSchedule.findOne({
       "slots._id": slotId,
       doctorId,
@@ -515,6 +516,7 @@ export const newAppointment = asyncHandler(async (req, res) => {
       patientId,
       time,
       userId,
+      mode,
     });
 
     // Save the appointment

@@ -26,10 +26,12 @@ import {
   updateSchedule,
 } from "../controllers/doctorSlot.controllers.js";
 import { createLeave, deleteLeave, getLeaves } from "../controllers/doctorLeave.controllers.js";
+import { authorizeRoles } from "../middlewares/admin.middleware.js";
+import { reviewForSingleDoctor } from "../controllers/review.controllers.js";
 
 const router = Router();
 
-router.post("/register", upload.single("avatar"), registerUser);
+router.post("/register", upload.single("avatar"),isLoggedIn,authorizeRoles("Admin"), registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.get("/me", isLoggedIn, getLoggedInUserDetails);
@@ -60,6 +62,7 @@ router.post("/createLeave",isLoggedIn,createLeave)
 router.delete("/deleteLeave/:leaveId",isLoggedIn,deleteLeave)
 router.get("/allLeave",isLoggedIn,getLeaves)
 router.delete('/delete',isLoggedIn,deleteDoctor)
+router.get('/reviews/:doctorId',reviewForSingleDoctor)
 
 
 export default router;

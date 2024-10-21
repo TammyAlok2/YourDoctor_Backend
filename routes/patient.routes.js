@@ -16,6 +16,7 @@ import {
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
 import { registerNeedHelp } from "../controllers/patientNeed.controllers.js";
+import { addReview, allReview } from "../controllers/review.controllers.js";
 
 const router = Router();
 
@@ -33,4 +34,8 @@ router.post('/postEnquiry',registerNeedHelp)
 router.delete('/delete',isLoggedIn,deletePatient)
 
 router.get('/allAppointments',isLoggedIn,allAppointmentByUser)
+
+router.post('/addReview/:doctorId',isLoggedIn,addReview)
+router.get('/allReviews',allReview)
+
 export default router;
