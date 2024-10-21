@@ -1,20 +1,15 @@
 import { Router } from "express";
-import { getAllNeedHelp } from "../controllers/patientNeed.controllers.js";
 import {
   deleteBlog,
   updateBlog,
   createBlog,
   updateUserAvatar,
   updateUserCoverImage,
-  allBlogs,
 } from "../controllers/blogs.controllers.js";
 import upload from "../middlewares/multer.middleware.js";
 
 const router = Router();
-
-router.get("/getAllPatientEnquiry", getAllNeedHelp);
-
-router.route("/blogs/addBlog").post(
+router.route("/addblog").post(
   upload.fields([
     {
       name: "avatar",
@@ -27,12 +22,11 @@ router.route("/blogs/addBlog").post(
   ]),
   createBlog
 );
-router.route("/blogs/:blogId").put(updateBlog);
-router.route("/blogs/:blogId").delete(deleteBlog);
+router.route("/:blogId").put(updateBlog);
+router.route("/:blogId").delete(deleteBlog);
 router
-  .route("blogs/:blogId")
+  .route("/:blogId")
   .patch(upload.single("coverImage"), updateUserCoverImage);
-router.route("/blogs/:blogId").patch(upload.single("avatar"), updateUserAvatar);
-router.get("/blogs/allBlogs",allBlogs)
+router.route("/:blogId").patch(upload.single("avatar"), updateUserAvatar);
 
 export default router;
