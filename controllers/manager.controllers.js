@@ -4,7 +4,13 @@ import { asyncHandler } from "../utils/asynchandler.js";
 import { Manager } from "../models/manager.models.js";
 import Appointment from "../models/appointment.models.js";
 
-// DOCTOR PERMISSIONS
+// DOCTOR PERMISSIONS 
+
+
+
+
+
+
 
 const createManager = asyncHandler(async (req, res) => {
   const { name, email, mobile, password } = req.body;
@@ -33,6 +39,8 @@ const createManager = asyncHandler(async (req, res) => {
       new ApiResponse(200, createdmanager, "manager created  successfully")
     );
 });
+
+
 const updateManager = asyncHandler(async (req, res) => {
   try {
     const { managerId } = req.params;
@@ -99,6 +107,37 @@ const seeAppointment = asyncHandler(async (req, res) => {
     throw new APPError(404, "appointment list not founded");
   }
 });
+
+
+const loginManager = asyncHandler(async(req,res)=>{
+
+  const {email,password} = req.body;
+  if(!email || !password){
+    throw new APPError(400, "All fields are required ");
+  }
+
+  try{
+    const manager = await Manager.findOne({email}) 
+    if(!manager){
+      throw new APPError(404, "Manager not found");
+    }
+     
+    const isPasswordMatch = await manager.comparePassword(password);
+
+
+
+  }
+  catch{
+
+  }
+})
+
+
+
+
+
+
+
 
 export {
   createManager,

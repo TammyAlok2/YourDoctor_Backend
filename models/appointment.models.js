@@ -65,7 +65,8 @@ default:"Doctor",
     slotId: {
       type: Schema.Types.ObjectId,
       ref: 'DoctorSchedule.slots',
-    },
+    }
+   
   },
   {
     timestamps: true,

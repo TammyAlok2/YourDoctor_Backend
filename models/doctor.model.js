@@ -63,6 +63,11 @@ type:Boolean,
 enum:[true,false],
 default:false,
     },
+    city:
+    {
+      type:String,
+      
+    },
     joinStatus:{
       type:Boolean,
       enum:[true,false],

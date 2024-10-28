@@ -20,6 +20,8 @@ const cookieOptions = {
  * @ROUTE @POST {{URL}}/api/v1/user/register
  * @ACCESS Public
  */
+
+
 export const registerUser = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from req object
   const {
@@ -71,9 +73,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     visitUnder7DaysFee:fees,
     emergencyFee1:fees,
     emergencyFee2:fees,
-
-
-
     },
     avatar: {
       public_id: email,
@@ -81,14 +80,12 @@ export const registerUser = asyncHandler(async (req, res, next) => {
         "https://res.cloudinary.com/du9jzqlpt/image/upload/v1674647316/avatar_drzgxv.jpg",
     },
   });
-
   // If user not created send message response
   if (!user) {
     return next(
       new AppError("User registration failed, please try again later", 400)
     );
   }
-
   // Run only if user sends a file
   if (req.file) {
     try {
@@ -128,6 +125,8 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   // If all good send the response to the frontend
   res.status(201).json(new ApiResponse(200, user, "User created successfully"));
 });
+
+
 
 /**
  * @LOGIN
