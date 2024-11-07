@@ -16,6 +16,7 @@ import {
   updateDoctorFees,
   tokenCheck,
   deleteDoctor,
+  updateAppointmentStatus,
 } from "../controllers/doctor.controllers.js";
 import { isLoggedIn } from "../middlewares/auth.middlewares.js";
 import upload from "../middlewares/multer.middleware.js";
@@ -48,6 +49,8 @@ router.post(
   isLoggedIn,
   updateAppointmentByDoctor
 );
+
+router.post("/updateAppointmentStatus",isLoggedIn,updateAppointmentStatus)
 router.get("/allDoctors", getAllDoctors);
 router.post("/createSchedule", isLoggedIn, createSchedule);
 router.post("updateSchedule", isLoggedIn, updateSchedule);
@@ -56,6 +59,7 @@ router.get("/allSchedule", isLoggedIn, allSchedule);
 router.get('/getScheduleByDate/:date',isLoggedIn,getScheduleByDate)
 router.post("/doctor-status", isLoggedIn, activeStatus);
 router.post("/update-fees", isLoggedIn,updateDoctorFees);
+
 
 router.post("/createLeave",isLoggedIn,createLeave)
 

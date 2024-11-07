@@ -586,9 +586,7 @@ export const updateAppointmentByDoctor = asyncHandler(async (req, res, next) => 
 
   const {appointmentId} = req.params;
 
-  if (!description|| !bloodPressure || !diabetes ||!weight) {
-    throw new AppError(400, "All fields are required ");
-  }
+
 
 
   const appointment = await Appointment.findById(appointmentId);
@@ -653,3 +651,38 @@ export const deleteDoctor = asyncHandler(async (req, res, next) => {
     .status(200)
     .json(new ApiResponse(200, doctor, "Doctor deleted successfully"));
 });
+
+
+export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
+
+  // taking doctor id and appointment id from user 
+
+  const {appointmentId,doctorId, status} = req.body;
+  console.log(status)
+
+  const doctor = await Doctor.findById(
+    {
+      _id:doctorId
+    }
+    );
+
+  if (!doctor) {
+    return next(new AppError("Doctor not found", 404));
+  }
+
+
+const appointment = await Appointment.findById(appointmentId)
+console.log(appointment.status)
+if (!appointment) {
+  return next(new AppError("Appointment not found ", 404));
+}
+
+ appointment.status = status;
+ await appointment.save()
+
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, appointment, "Appointment Updated Successfully"));
+});
+

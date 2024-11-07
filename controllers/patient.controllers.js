@@ -465,6 +465,8 @@ export const newAppointment = asyncHandler(async (req, res) => {
     slotId,
     time,
     date,
+    slotStartTime,
+    slotEndTime,
   } = req.body;
   const { doctorId } = req.params;
 
@@ -517,6 +519,8 @@ console.log(userId)
       time,
       userId,
       mode,
+      slotStartTime,
+      slotEndTime
     });
 
     // Save the appointment

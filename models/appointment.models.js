@@ -57,6 +57,7 @@ default:"Doctor",
     status: {
       type: String,
       enum: ["Pending", "Accepted", "Rejected"],
+      default:"Pending",
     },
     patientId:{
       type:String,
@@ -65,6 +66,12 @@ default:"Doctor",
     slotId: {
       type: Schema.Types.ObjectId,
       ref: 'DoctorSchedule.slots',
+    },
+    slotStartTime:{
+      type:String,
+    },
+    slotEndTime:{
+      type:String,
     }
    
   },
