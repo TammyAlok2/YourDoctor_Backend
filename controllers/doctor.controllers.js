@@ -563,7 +563,8 @@ export const newAppointmentByDoctor = asyncHandler(async (req, res, next) => {
     bloodPressure,
     diabetes,
     weight,
-    mode
+    mode,
+    status:"Accepted"
   });
   if (!appointment) {
     return next(new AppError("Failed to create appointment", 400));
@@ -653,36 +654,181 @@ export const deleteDoctor = asyncHandler(async (req, res, next) => {
 });
 
 
-export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
+import axios from 'axios';
 
-  // taking doctor id and appointment id from user 
+const AISENSY_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZjE0ZDI3NzlhOWNjMDZmMTI0ZmMyOCIsIm5hbWUiOiJZb3VyTGFiIiwiYXBwTmFtZSI6IkFpU2Vuc3kiLCJjbGllbnRJZCI6IjY2ZjE0ZDI2NzlhOWNjMDZmMTI0ZmMyMiIsImFjdGl2ZVBsYW4iOiJCQVNJQ19NT05USExZIiwiaWF0IjoxNzI3MDg5OTU5fQ.rfcannqNPX1x_0BT8dGDBCirih47-nu4uAawLQQct1k";
 
-  const {appointmentId,doctorId, status} = req.body;
-  console.log(status)
+// Function to format phone number
+const formatPhoneNumber = (phone) => {
+  // Remove any non-numeric characters
+  const cleaned = String(phone).replace(/\D/g, '');
+  // Ensure it starts with the country code
+  return cleaned.startsWith('91') ? cleaned : `91${cleaned}`;
+};
 
-  const doctor = await Doctor.findById(
-    {
-      _id:doctorId
-    }
+// Function to send WhatsApp notification
+const sendWhatsAppNotification = async (patientName, patientPhone, doctorName,dateAndTime) => {
+  try {
+    const formattedPhone = formatPhoneNumber(patientPhone);
+    console.log('Sending notification to:', { patientName, formattedPhone, doctorName,dateAndTime });
+
+    
+    const payload = {
+      apiKey: AISENSY_API_KEY,
+      campaignName: "Appointment Notification To Patient",
+      destination: formattedPhone,
+      userName: "YourLab",
+      templateParams: [
+        patientName || "User",
+        doctorName || "updated",
+        dateAndTime
+      ],
+      source: "new-landing-page form",
+      media: {},
+      buttons: [],
+      carouselCards: [],
+      location: {},
+      paramsFallbackValue: {
+        FirstName: "user"
+      }
+    };
+
+    console.log('Sending payload:', JSON.stringify(payload, null, 2));
+
+    const response = await axios.post(
+      'https://backend.aisensy.com/campaign/t1/api/v2',
+      payload,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
     );
 
-  if (!doctor) {
-    return next(new AppError("Doctor not found", 404));
+    console.log('WhatsApp notification sent successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending WhatsApp notification:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status
+    });
+    throw error;
   }
+};
 
+// Updated appointment status controller
+export const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
+  try {
+    const { appointmentId, doctorId, status } = req.body;
 
-const appointment = await Appointment.findById(appointmentId)
-console.log(appointment.status)
-if (!appointment) {
-  return next(new AppError("Appointment not found ", 404));
-}
+    // Validate input
+    if (!appointmentId || !doctorId || !status) {
+      return next(new AppError("Missing required fields", 400));
+    }
 
- appointment.status = status;
- await appointment.save()
+    // Find doctor
+    const doctor = await Doctor.findById(doctorId);
+    if (!doctor) {
+      return next(new AppError("Doctor not found", 404));
+    }
 
+    // Find appointment
+    const appointment = await Appointment.findById(appointmentId)
+    if (!appointment) {
+      return next(new AppError("Appointment not found", 404));
+    }
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, appointment, "Appointment Updated Successfully"));
+    // Update appointment status
+    appointment.status = status;
+    await appointment.save();
+
+    // Get patient details from the populated appointment
+    const patientName = `  ${ appointment?.patientName || 'Patient'}`;
+    const patientPhone = appointment?.patientPhone;
+    
+    // Format doctor name with specialty
+    const doctorName = `${doctor?.fullName || 'Dr.'} (${doctor?.specialist || 'Specialist'})`;
+    
+    // Format date and time with proper spacing
+    const dateAndTime = `${appointment?.date || ''} (${appointment?.slotStartTime || ''} to ${appointment?.slotEndTime || ''})`;
+    
+    if (!patientPhone) {
+      console.warn('No phone number found for patient');
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          appointment,
+          "Appointment Updated Successfully but No Phone Number for Notification"
+        )
+      );
+    }
+
+    try {
+      // Send WhatsApp notification
+      await sendWhatsAppNotification(
+        patientName,
+        patientPhone,
+        doctorName,
+        dateAndTime
+      );
+
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          appointment,
+          "Appointment Updated Successfully and Notification Sent"
+        )
+      );
+    } catch (notificationError) {
+      console.error('WhatsApp notification failed:', notificationError);
+      
+      // Still return success for the appointment update
+      res.status(200).json(
+        new ApiResponse(
+          200,
+          appointment,
+          "Appointment Updated Successfully but Notification Failed"
+        )
+      );
+    }
+  } catch (error) {
+    console.error('Error in updateAppointmentStatus:', error);
+    next(error);
+  }
 });
 
+// Test endpoint for WhatsApp notification
+export const testWhatsAppNotification = asyncHandler(async (req, res) => {
+  const { name, phone, status } = req.body;
+
+  try {
+    const result = await sendWhatsAppNotification(name, phone, status);
+    res.status(200).json({
+      success: true,
+      message: "Test notification sent successfully",
+      data: result
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to send test notification",
+      error: error.response?.data || error.message
+    });
+  }
+});
+
+// Error handling middleware
+export const errorHandler = (err, req, res, next) => {
+  console.error('Error:', {
+    message: err.message,
+    stack: err.stack,
+    status: err.status
+  });
+
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal server error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+  });
+};
