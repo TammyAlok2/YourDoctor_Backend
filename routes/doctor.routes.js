@@ -32,7 +32,7 @@ import { reviewForSingleDoctor } from "../controllers/review.controllers.js";
 
 const router = Router();
 
-router.post("/register", upload.single("avatar"),isLoggedIn,authorizeRoles("Admin"), registerUser);
+router.post("/register", upload.single("avatar"),registerUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 router.get("/me", isLoggedIn, getLoggedInUserDetails);

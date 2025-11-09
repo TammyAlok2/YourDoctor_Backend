@@ -17,10 +17,10 @@ const app = express();
 // Allowed Origins
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://your-production-domain.com",
-  "https://yourlab.in",
-  "https://www.yourlab.in",
-  "https://admin-panel-beta-sepia.vercel.app", // Admin Panel Domain
+   "http://localhost:3001",
+   process.env.FRONTEND_URL,
+   process.env.ADMIN_PANEL_URL,
+ // Admin Panel Domain
   "capacitor://localhost",
   "ionic://localhost",
   "http://localhost",
